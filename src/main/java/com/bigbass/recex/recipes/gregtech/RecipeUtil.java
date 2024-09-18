@@ -1,6 +1,7 @@
 package com.bigbass.recex.recipes.gregtech;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -54,8 +55,9 @@ public class RecipeUtil {
             } catch (Exception e2) {}
         }
 
-        if (item.uN != null && !item.uN.isEmpty() && item.uN.equalsIgnoreCase("gt.integrated_circuit")) { // Programmed
-                                                                                                          // Circuit
+        // Programmed Circuit
+        if (Arrays.asList("gt.integrated_circuit", "item.T3RecipeSelector", "item.BioRecipeSelector")
+            .contains(item.uN)) {
             item = new ItemProgrammedCircuit(item, stack.getItemDamage());
         }
 
