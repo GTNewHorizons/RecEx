@@ -13,7 +13,7 @@ import com.bigbass.recex.recipes.ingredients.Fluid;
 import com.bigbass.recex.recipes.ingredients.Item;
 import com.bigbass.recex.recipes.ingredients.ItemOreDict;
 
-import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GTLanguageManager;
 
 public class RecipeUtil {
 
@@ -51,7 +51,7 @@ public class RecipeUtil {
             item.lN = stack.getDisplayName();
         } catch (Exception e1) {
             try {
-                item.lN = GT_LanguageManager.getTranslation(stack.getUnlocalizedName());
+                item.lN = GTLanguageManager.getTranslation(stack.getUnlocalizedName());
             } catch (Exception e2) {}
         }
 
@@ -66,7 +66,7 @@ public class RecipeUtil {
 
     /**
      * Might return null!
-     * 
+     *
      * @param name
      * @return
      */
@@ -89,7 +89,7 @@ public class RecipeUtil {
 
     /**
      * Might return null!
-     * 
+     *
      * @param names
      * @return
      */
@@ -122,7 +122,7 @@ public class RecipeUtil {
             fluid.uN = stack.getUnlocalizedName();
         } catch (Exception e) {}
         try {
-            fluid.lN = GT_LanguageManager.getTranslation(stack.getUnlocalizedName());
+            fluid.lN = GTLanguageManager.getTranslation(stack.getUnlocalizedName());
         } catch (Exception e1) {
             try {
                 fluid.lN = stack.getFluid()
@@ -139,7 +139,7 @@ public class RecipeUtil {
 
     /**
      * Retrieves all items which match a given OreDictionary name.
-     * 
+     *
      * @param name OreDictionary name
      * @return Collection of items retrieved from the OreDictionary
      */

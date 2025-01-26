@@ -41,8 +41,8 @@ import com.google.gson.GsonBuilder;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMapBackend;
 import gregtech.api.recipe.RecipeMaps;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GTLanguageManager;
+import gregtech.api.util.GTRecipe;
 
 public class RecipeExporter {
 
@@ -63,14 +63,14 @@ public class RecipeExporter {
      * Collects recipes into a master Hashtable (represents a JSON Object),
      * then serializes it and saves it to a datetime-stamped file.
      * </p>
-     * 
+     *
      * <p>
      * Recipes are stored in collections, often either List's or Hashtable's.
      * The Gson library will serialize objects based on their public fields.
      * The field name becomes the key, and the value is also serialized the same way.
      * Lists are serialized as JSON arrays.
      * </p>
-     * 
+     *
      * <p>
      * Schema for existing recipe sources should not be radically changed unless
      * truly necessary. Adding additional data is acceptable however.
@@ -144,7 +144,7 @@ public class RecipeExporter {
             if(a.length != b.length) {
                 return Integer.compare(a.length, b.length);
             }
-    
+
             for(int i = 0; i < a.length; i++) {
                 T left = a[i], right = b[i];
 
@@ -160,7 +160,7 @@ public class RecipeExporter {
 
                 if (result != 0) return result;
             }
-    
+
             return 0;
         };
     }
@@ -170,7 +170,7 @@ public class RecipeExporter {
             if(a.size() != b.size()) {
                 return Integer.compare(a.size(), b.size());
             }
-    
+
             for(int i = 0; i < a.size(); i++) {
                 T left = a.get(i), right = b.get(i);
 
@@ -183,10 +183,10 @@ public class RecipeExporter {
                 }
 
                 int result = base.compare(left, right);
-    
+
                 if (result != 0) return result;
             }
-    
+
             return 0;
         };
     }
@@ -197,14 +197,14 @@ public class RecipeExporter {
     // private static final Comparator<List<FluidStack>> COMPARE_FLUID_STACK_LIST = makeListComparator(COMPARE_FLUID_STACKS);
 
     // super cursed and probably stupidly slow, but it works
-    private static final Comparator<GT_Recipe> COMPARE_RECIPE =
-        Comparator.comparingInt((GT_Recipe r) -> r.mEUt)
-        .thenComparingInt((GT_Recipe r) -> r.mDuration)
-        .thenComparingInt((GT_Recipe r) -> r.mSpecialValue)
-        .thenComparing((GT_Recipe r) -> r.mInputs, COMPARE_ITEM_STACK_ARRAY)
-        .thenComparing((GT_Recipe r) -> r.mFluidInputs, COMPARE_FLUID_STACK_ARRAY)
-        .thenComparing((GT_Recipe r) -> r.mOutputs, COMPARE_ITEM_STACK_ARRAY)
-        .thenComparing((GT_Recipe r) -> r.mFluidOutputs, COMPARE_FLUID_STACK_ARRAY);
+    private static final Comparator<GTRecipe> COMPARE_RECIPE =
+        Comparator.comparingInt((GTRecipe r) -> r.mEUt)
+        .thenComparingInt((GTRecipe r) -> r.mDuration)
+        .thenComparingInt((GTRecipe r) -> r.mSpecialValue)
+        .thenComparing((GTRecipe r) -> r.mInputs, COMPARE_ITEM_STACK_ARRAY)
+        .thenComparing((GTRecipe r) -> r.mFluidInputs, COMPARE_FLUID_STACK_ARRAY)
+        .thenComparing((GTRecipe r) -> r.mOutputs, COMPARE_ITEM_STACK_ARRAY)
+        .thenComparing((GTRecipe r) -> r.mFluidOutputs, COMPARE_FLUID_STACK_ARRAY);
 
     // spotless:on
 
@@ -254,8 +254,8 @@ public class RecipeExporter {
         return out;
     }
 
-    private static GT_Recipe cloneAndSort(GT_Recipe recipe) {
-        GT_Recipe out = new GT_Recipe(null, null, null, null, null, 0, 0);
+    private static GTRecipe cloneAndSort(GTRecipe recipe) {
+        GTRecipe out = new GTRecipe(null, null, null, null, null, 0, 0);
 
         out.mSpecialItems = recipe.mSpecialItems;
         out.mChances = recipe.mChances;
@@ -284,7 +284,7 @@ public class RecipeExporter {
      * This is a minor file size improvement. Rather than specifying the machine's name in every recipe,
      * the machine name is only listed once for the entire file.
      * </p>
-     * 
+     *
      * <p>
      * This format does not impede the process of loading the recipes into NEP.
      * </p>
@@ -309,14 +309,14 @@ public class RecipeExporter {
             GregtechMachine mach = new GregtechMachine();
 
             // machine name retrieval
-            mach.n = GT_LanguageManager.getTranslation(map.unlocalizedName);
+            mach.n = GTLanguageManager.getTranslation(map.unlocalizedName);
             if (mach.n == null || mach.n.isEmpty()) {
                 mach.n = map.unlocalizedName;
             }
 
             RecipeExporterMod.log.info("Processing recipe map " + mach.n);
 
-            List<GT_Recipe> recipes = map.getAllRecipes()
+            List<GTRecipe> recipes = map.getAllRecipes()
                 .stream()
                 .map(RecipeExporter::cloneAndSort)
                 .sorted(COMPARE_RECIPE)
@@ -324,7 +324,7 @@ public class RecipeExporter {
 
             RecipeExporterMod.log.info("Finished sorting recipes for map " + mach.n);
 
-            for (GT_Recipe rec : recipes) {
+            for (GTRecipe rec : recipes) {
                 GregtechRecipe gtr = new GregtechRecipe();
                 gtr.en = rec.mEnabled;
                 gtr.dur = rec.mDuration;
