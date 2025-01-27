@@ -21,11 +21,11 @@ public class Item implements IItem {
 
     }
 
-    public Item(int amount, int damage, String unlocalizedName, String displayName) {
-
+    public Item(int amount, int damage, String id, String displayName, String nbt) {
         this.a = amount;
         this.m = damage;
-        this.id = unlocalizedName;
+        this.id = id;
         this.lN = displayName;
+        this.nbt = nbt;
     }
 }
