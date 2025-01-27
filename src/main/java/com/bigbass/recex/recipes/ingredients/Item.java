@@ -8,20 +8,24 @@ public class Item implements IItem {
     /** damage */
     public int m;
 
-    /** unlocalizedName */
-    public String uN;
+    /** uniqueIdentifier */
+    public String id;
 
     /** localizedName */
     public String lN;
+
+    /** nbt tag */
+    public String nbt;
 
     public Item() {
 
     }
 
     public Item(int amount, int damage, String unlocalizedName, String displayName) {
+
         this.a = amount;
         this.m = damage;
-        this.uN = unlocalizedName;
+        this.id = unlocalizedName;
         this.lN = displayName;
     }
 }

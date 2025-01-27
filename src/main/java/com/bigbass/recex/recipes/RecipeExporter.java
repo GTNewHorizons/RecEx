@@ -113,8 +113,7 @@ public class RecipeExporter {
 
         root.put("sources", sources);
 
-        Gson gson = (new GsonBuilder()).serializeNulls()
-            .create();
+        Gson gson = (new GsonBuilder()).create();
         try {
             saveData(gson.toJson(root));
         } catch (Exception e) {

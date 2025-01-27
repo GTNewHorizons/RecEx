@@ -1,18 +1,17 @@
 package com.bigbass.recex.recipes.gregtech;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.bigbass.recex.recipes.ItemProgrammedCircuit;
 import com.bigbass.recex.recipes.ingredients.Fluid;
 import com.bigbass.recex.recipes.ingredients.Item;
 import com.bigbass.recex.recipes.ingredients.ItemOreDict;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.util.GTLanguageManager;
 
 public class RecipeUtil {
@@ -26,8 +25,15 @@ public class RecipeUtil {
 
         item.a = stack.stackSize;
         item.m = stack.getItemDamage();
+        item.nbt = stack.hasTagCompound() ? stack.getTagCompound()
+            .toString() : null;
         try {
-            item.uN = stack.getUnlocalizedName();
+            GameRegistry.UniqueIdentifier uniqueIdentifier = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+            if (uniqueIdentifier != null) {
+                item.id = uniqueIdentifier.toString();
+            } else {
+                item.id = stack.getUnlocalizedName();
+            }
         } catch (Exception e) {}
         try {
             item.lN = stack.getDisplayName();
@@ -44,8 +50,16 @@ public class RecipeUtil {
         Item item = new Item();
 
         item.a = stack.stackSize;
+        item.m = stack.getItemDamage();
+        item.nbt = stack.hasTagCompound() ? stack.getTagCompound()
+            .toString() : null;
         try {
-            item.uN = stack.getUnlocalizedName();
+            GameRegistry.UniqueIdentifier uniqueIdentifier = GameRegistry.findUniqueIdentifierFor(stack.getItem());
+            if (uniqueIdentifier != null) {
+                item.id = uniqueIdentifier.toString();
+            } else {
+                item.id = stack.getUnlocalizedName();
+            }
         } catch (Exception e) {}
         try {
             item.lN = stack.getDisplayName();
@@ -53,12 +67,6 @@ public class RecipeUtil {
             try {
                 item.lN = GTLanguageManager.getTranslation(stack.getUnlocalizedName());
             } catch (Exception e2) {}
-        }
-
-        // Programmed Circuit
-        if (Arrays.asList("gt.integrated_circuit", "item.T3RecipeSelector", "item.BioRecipeSelector")
-            .contains(item.uN)) {
-            item = new ItemProgrammedCircuit(item, stack.getItemDamage());
         }
 
         return item;
@@ -119,7 +127,7 @@ public class RecipeUtil {
 
         fluid.a = stack.amount;
         try {
-            fluid.uN = stack.getUnlocalizedName();
+            fluid.id = stack.getUnlocalizedName();
         } catch (Exception e) {}
         try {
             fluid.lN = GTLanguageManager.getTranslation(stack.getUnlocalizedName());
