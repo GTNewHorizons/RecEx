@@ -127,7 +127,8 @@ public class RecipeUtil {
 
         fluid.a = stack.amount;
         try {
-            fluid.id = stack.getUnlocalizedName();
+            fluid.id = stack.getFluid()
+                .getName();
         } catch (Exception e) {}
         try {
             fluid.lN = GTLanguageManager.getTranslation(stack.getUnlocalizedName());
