@@ -14,6 +14,8 @@ public class GregtechRecipe {
     public int dur;
     /** EU/t */
     public int eut;
+    /** Special Value */
+    public int sp;
     /** itemInputs */
     public List<Item> iI;
     /** itemOutputs */

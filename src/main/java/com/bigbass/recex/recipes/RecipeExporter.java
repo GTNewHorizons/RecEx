@@ -328,6 +328,7 @@ public class RecipeExporter {
                 gtr.en = rec.mEnabled;
                 gtr.dur = rec.mDuration;
                 gtr.eut = rec.mEUt;
+                if (rec.mSpecialValue != 0) gtr.sp = rec.mSpecialValue;
 
                 // item inputs
                 for (ItemStack stack : rec.mInputs) {
