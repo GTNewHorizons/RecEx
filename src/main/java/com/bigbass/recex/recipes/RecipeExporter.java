@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import bartworks.API.recipe.BartWorksRecipeMaps;
+import ggfab.api.GGFabRecipeMaps;
 import goodgenerator.api.recipe.GoodGeneratorRecipeMaps;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMapBackend;
@@ -294,8 +295,12 @@ public class RecipeExporter {
     @SuppressWarnings("unchecked")
     private List<GregtechMachine> getGregtechRecipes() {
         List<RecipeMap<RecipeMapBackend>> maps = new ArrayList<>();
-        List<Class<?>> recipeMapClasses = Arrays
-            .asList(RecipeMaps.class, GTPPRecipeMaps.class, BartWorksRecipeMaps.class, GoodGeneratorRecipeMaps.class);
+        List<Class<?>> recipeMapClasses = Arrays.asList(
+            RecipeMaps.class,
+            GTPPRecipeMaps.class,
+            BartWorksRecipeMaps.class,
+            GoodGeneratorRecipeMaps.class,
+            GGFabRecipeMaps.class);
 
         for (Class<?> recipeMapClass : recipeMapClasses) {
             for (Field field : recipeMapClass.getDeclaredFields()) {
