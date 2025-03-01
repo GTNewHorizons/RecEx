@@ -38,11 +38,14 @@ import com.bigbass.recex.recipes.ingredients.ItemOreDict;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import bartworks.API.recipe.BartWorksRecipeMaps;
+import goodgenerator.api.recipe.GoodGeneratorRecipeMaps;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMapBackend;
 import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GTLanguageManager;
 import gregtech.api.util.GTRecipe;
+import gtPlusPlus.api.recipe.GTPPRecipeMaps;
 
 public class RecipeExporter {
 
@@ -291,13 +294,17 @@ public class RecipeExporter {
     @SuppressWarnings("unchecked")
     private List<GregtechMachine> getGregtechRecipes() {
         List<RecipeMap<RecipeMapBackend>> maps = new ArrayList<>();
+        List<Class<?>> recipeMapClasses = Arrays
+            .asList(RecipeMaps.class, GTPPRecipeMaps.class, BartWorksRecipeMaps.class, GoodGeneratorRecipeMaps.class);
 
-        for (Field field : RecipeMaps.class.getDeclaredFields()) {
-            if (field.getType() == RecipeMap.class) {
-                try {
-                    maps.add((RecipeMap<RecipeMapBackend>) field.get(null));
-                } catch (IllegalArgumentException | IllegalAccessException e) {
-                    e.printStackTrace();
+        for (Class<?> recipeMapClass : recipeMapClasses) {
+            for (Field field : recipeMapClass.getDeclaredFields()) {
+                if (field.getType() == RecipeMap.class) {
+                    try {
+                        maps.add((RecipeMap<RecipeMapBackend>) field.get(null));
+                    } catch (IllegalArgumentException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
