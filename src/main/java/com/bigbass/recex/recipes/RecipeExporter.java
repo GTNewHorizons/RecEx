@@ -47,6 +47,7 @@ import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GTLanguageManager;
 import gregtech.api.util.GTRecipe;
 import gtPlusPlus.api.recipe.GTPPRecipeMaps;
+import tectech.recipe.TecTechRecipeMaps;
 
 public class RecipeExporter {
 
@@ -300,7 +301,8 @@ public class RecipeExporter {
             GTPPRecipeMaps.class,
             BartWorksRecipeMaps.class,
             GoodGeneratorRecipeMaps.class,
-            GGFabRecipeMaps.class);
+            GGFabRecipeMaps.class,
+            TecTechRecipeMaps.class);
 
         for (Class<?> recipeMapClass : recipeMapClasses) {
             for (Field field : recipeMapClass.getDeclaredFields()) {
