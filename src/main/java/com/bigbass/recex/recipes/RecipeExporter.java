@@ -22,6 +22,7 @@ import net.lingala.zip4j.model.enums.CompressionMethod;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.fluids.FluidStack;
@@ -85,12 +86,14 @@ public class RecipeExporter {
         List<ShapedRecipe> shapedRecies = getShapedRecipes();
         List<ShapelessRecipe> shapelessRecipes = getShapelessRecipes();
         List<OreDictShapedRecipe> oredictShapedRecipes = getOreDictShapedRecipes();
+        List<FurnaceRecipe> furnaceRecipes = getFurnaceRecipes();
 
-        emitJson(gtRecipes, shapedRecies, shapelessRecipes, oredictShapedRecipes);
+        emitJson(gtRecipes, shapedRecies, shapelessRecipes, oredictShapedRecipes, furnaceRecipes);
     }
 
     private void emitJson(List<GregtechMachine> gtRecipes, List<ShapedRecipe> shapedRecies,
-        List<ShapelessRecipe> shapelessRecipes, List<OreDictShapedRecipe> oredictShapedRecipes) {
+        List<ShapelessRecipe> shapelessRecipes, List<OreDictShapedRecipe> oredictShapedRecipes,
+        List<FurnaceRecipe> furnaceRecipes) {
         Hashtable<String, Object> root = new Hashtable<String, Object>();
 
         List<Object> sources = new ArrayList<Object>();
@@ -113,6 +116,11 @@ public class RecipeExporter {
         temp = new HashMap<>();
         temp.put("type", "shapedOreDict");
         temp.put("recipes", oredictShapedRecipes);
+        sources.add(temp);
+
+        temp = new HashMap<>();
+        temp.put("type", "smelting");
+        temp.put("recipes", furnaceRecipes);
         sources.add(temp);
 
         root.put("sources", sources);
@@ -603,6 +611,18 @@ public class RecipeExporter {
         }
 
         return retRecipes;
+    }
+
+    private List<FurnaceRecipe> getFurnaceRecipes() {
+        return FurnaceRecipes.smelting()
+            .getSmeltingList()
+            .entrySet()
+            .stream()
+            .map(
+                entry -> new FurnaceRecipe(
+                    RecipeUtil.formatRegularItemStack(entry.getKey()),
+                    RecipeUtil.formatRegularItemStack(entry.getValue())))
+            .collect(Collectors.toList());
     }
 
     private void saveData(String json) {
