@@ -25,6 +25,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -40,12 +41,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import bartworks.API.recipe.BartWorksRecipeMaps;
-import ggfab.api.GGFabRecipeMaps;
 import goodgenerator.api.recipe.GoodGeneratorRecipeMaps;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMapBackend;
 import gregtech.api.recipe.RecipeMaps;
-import gregtech.api.util.GTLanguageManager;
 import gregtech.api.util.GTRecipe;
 import gtPlusPlus.api.recipe.GTPPRecipeMaps;
 import tectech.recipe.TecTechRecipeMaps;
@@ -136,11 +135,11 @@ public class RecipeExporter {
     }
 
     // spotless:off
-    private static final Comparator<net.minecraft.item.Item> COMPARE_ITEM = Comparator.comparingInt(i -> net.minecraft.item.Item.getIdFromItem(i));
+    private static final Comparator<net.minecraft.item.Item> COMPARE_ITEM = Comparator.comparingInt(net.minecraft.item.Item::getIdFromItem);
 
     private static final Comparator<ItemStack> COMPARE_ITEM_STACKS =
-        Comparator.comparing((ItemStack s) -> s.getItem(), COMPARE_ITEM)
-        .thenComparingInt((ItemStack s) -> s.getItemDamage())
+        Comparator.comparing(ItemStack::getItem, COMPARE_ITEM)
+        .thenComparingInt(ItemStack::getItemDamage)
         .thenComparingInt((ItemStack s) -> s.stackSize)
         // Really bad, but idc about performance here because this will be used very rarely if ever
         .thenComparing((ItemStack s) -> s.stackTagCompound == null ? "" : s.stackTagCompound.toString());
@@ -309,7 +308,6 @@ public class RecipeExporter {
             GTPPRecipeMaps.class,
             BartWorksRecipeMaps.class,
             GoodGeneratorRecipeMaps.class,
-            GGFabRecipeMaps.class,
             TecTechRecipeMaps.class);
 
         for (Class<?> recipeMapClass : recipeMapClasses) {
@@ -330,7 +328,7 @@ public class RecipeExporter {
             GregtechMachine mach = new GregtechMachine();
 
             // machine name retrieval
-            mach.n = GTLanguageManager.getTranslation(map.unlocalizedName);
+            mach.n = StatCollector.translateToLocal(map.unlocalizedName);
             if (mach.n == null || mach.n.isEmpty()) {
                 mach.n = map.unlocalizedName;
             }
@@ -512,7 +510,7 @@ public class RecipeExporter {
     private static final Comparator<Object> COMPARE_OREDICT_INPUT = (Object a, Object b) -> {
         int ai = getInputType(a), bi = getInputType(b);
 
-        if (ai != bi || ai == -1 || bi == -1) {
+        if (ai != bi || ai == -1) {
             return Integer.compare(ai, bi);
         }
 
@@ -563,13 +561,13 @@ public class RecipeExporter {
                     rec.iI.add(RecipeUtil.formatRegularItemStack(new ItemStack((net.minecraft.item.Item) input)));
                 } else if (input instanceof Block) {
                     rec.iI.add(RecipeUtil.formatRegularItemStack(new ItemStack((Block) input, 1, Short.MAX_VALUE)));
-                } else if (input instanceof ArrayList<?>) {
-                    ArrayList<?> list = (ArrayList<?>) input;
-                    if (list != null && list.size() > 0) {
+                    // spotless:off
+                } else if (input instanceof ArrayList<?> list) {
+                    // spotless:on
+                    if (!list.isEmpty()) {
                         ItemOreDict item = new ItemOreDict();
                         for (Object listObj : list) {
-                            if (listObj instanceof ItemStack) {
-                                ItemStack stack = (ItemStack) listObj;
+                            if (listObj instanceof ItemStack stack) {
                                 item.ims.add(RecipeUtil.formatRegularItemStack(stack));
 
                                 int[] ids = OreDictionary.getOreIDs(stack);
@@ -603,7 +601,7 @@ public class RecipeExporter {
                                 + " | "
                                 + input.getClass()
                                     .getName());
-                    } catch (NullPointerException e) {}
+                    } catch (NullPointerException ignored) {}
                 }
             }
 
