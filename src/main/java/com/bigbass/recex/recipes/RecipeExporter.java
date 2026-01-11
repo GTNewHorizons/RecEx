@@ -561,7 +561,9 @@ public class RecipeExporter {
                     rec.iI.add(RecipeUtil.formatRegularItemStack(new ItemStack((net.minecraft.item.Item) input)));
                 } else if (input instanceof Block) {
                     rec.iI.add(RecipeUtil.formatRegularItemStack(new ItemStack((Block) input, 1, Short.MAX_VALUE)));
+                    // spotless:off
                 } else if (input instanceof ArrayList<?> list) {
+                    // spotless:on
                     if (!list.isEmpty()) {
                         ItemOreDict item = new ItemOreDict();
                         for (Object listObj : list) {
