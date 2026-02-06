@@ -269,7 +269,7 @@ public class RecipeExporter {
         GTRecipe out = new GTRecipe(null, null, null, null, null, 0, 0);
 
         out.mSpecialItems = recipe.mSpecialItems;
-        out.mChances = recipe.mChances;
+        out.mInputChances = recipe.mInputChances;
         out.mDuration = recipe.mDuration;
         out.mSpecialValue = recipe.mSpecialValue;
         out.mEUt = recipe.mEUt;
