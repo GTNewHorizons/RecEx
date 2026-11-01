@@ -3,7 +3,6 @@ package com.bigbass.recex.recipes;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,14 +39,9 @@ import com.bigbass.recex.recipes.ingredients.ItemOreDict;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import bartworks.API.recipe.BartWorksRecipeMaps;
-import goodgenerator.api.recipe.GoodGeneratorRecipeMaps;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMapBackend;
-import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GTRecipe;
-import gtPlusPlus.api.recipe.GTPPRecipeMaps;
-import tectech.recipe.TecTechRecipeMaps;
 
 public class RecipeExporter {
 
@@ -303,24 +297,10 @@ public class RecipeExporter {
     @SuppressWarnings("unchecked")
     private List<GregtechMachine> getGregtechRecipes() {
         List<RecipeMap<RecipeMapBackend>> maps = new ArrayList<>();
-        List<Class<?>> recipeMapClasses = Arrays.asList(
-            RecipeMaps.class,
-            GTPPRecipeMaps.class,
-            BartWorksRecipeMaps.class,
-            GoodGeneratorRecipeMaps.class,
-            TecTechRecipeMaps.class);
-
-        for (Class<?> recipeMapClass : recipeMapClasses) {
-            for (Field field : recipeMapClass.getDeclaredFields()) {
-                if (field.getType() == RecipeMap.class) {
-                    try {
-                        maps.add((RecipeMap<RecipeMapBackend>) field.get(null));
-                    } catch (IllegalArgumentException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+        for (RecipeMap<?> map : RecipeMap.ALL_RECIPE_MAPS.values()) {
+            maps.add((RecipeMap<RecipeMapBackend>) map);
         }
+        maps.sort((a, b) -> a.unlocalizedName.compareTo(b.unlocalizedName));
 
         List<GregtechMachine> machines = new ArrayList<GregtechMachine>();
 
